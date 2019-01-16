@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends Activity {
-
+    private String CorePath = "/data/data/" + getPackageName() + "/files";
     public static MainActivity Host;
     public StarSrvGroupClass SrvGroup;
     private TextView result;
@@ -127,26 +127,24 @@ public class MainActivity extends Activity {
         pythonPath._Call("insert", 0, "/data/data/" + getPackageName() + "/files/python3.4.zip");
         pythonPath._Call("insert", 0, this.getApplicationInfo().nativeLibraryDir);
         pythonPath._Call("insert", 0, "/data/data/" + getPackageName() + "/files");
-
+// 直接执行整个Python文件流
         python._Call("execute", pystring);
         Object testread = python._Call("testread", "/data/data/" + getPackageName() + "/files/test.txt");
         result.setText(testread + "");
-
-        final String CorePath = "/data/data/" + getPackageName() + "/files";
+//Python调用Java
         python._Set("JavaClass", CallBackClass.class);
         Service._DoFile("python", CorePath + "/test_calljava.py", "");
-
+//Java调用Python
         //调用Python代码
         Service._DoFile("python", CorePath + "/show.py", "");
-     result2.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-             Object stop = python._Call("stop", CorePath + "/show.py");
-             result2.setText(stop + "");
-         }
-     });
-
-//        result2.setText(testread + "");
+        result2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Object stop = python._Call("stop", CorePath + "/show.py");
+                result2.setText(stop + "");
+            }
+        });
+        //result2.setText(testread + "");
     }
 
 
